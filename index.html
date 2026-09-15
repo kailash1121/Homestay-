@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pahadi Stays & Market | उत्तराखंड लोकल नेटवर्क</title>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #0f766e; --primary-dark: #115e59; --accent: #f59e0b;
+  --bg: #f8fafc; --text: #0f172a; --muted: #64748b;
+  --success: #16a34a; --danger: #dc2626; --taxi: #0284c7; --small-taxi: #8b5cf6; --shop: #ea580c;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+
+header { background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+.navbar { max-width: 1200px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand-icon { background: var(--primary); color: white; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+.brand-text h1 { font-size: 1.5rem; font-weight: 800; color: var(--text); line-height: 1.1; }
+.brand-text p { font-size: 0.85rem; color: var(--primary); font-weight: 700; text-transform: uppercase; }
+
+.head-actions { display: flex; gap: 10px; align-items: center; }
+.btn-outline { border: 2px solid var(--primary); color: var(--primary); background: transparent; padding: 8px 12px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size:0.9rem; }
+.btn-outline.driver-btn { border-color: var(--taxi); color: var(--taxi); }
+.btn-outline:hover { background: var(--primary); color: white; }
+.btn-outline.driver-btn:hover { background: var(--taxi); color: white; }
+
+.banner { background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1542223616-949cb81c3c90?w=1200&auto=format&fit=crop&q=80') center/cover; color: white; padding: 50px 20px; text-align: center; }
+.banner h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 12px; color: #fef08a; }
+.banner p { font-size: 1.1rem; opacity: 0.95; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+
+.container { max-width: 1200px; margin: 40px auto; padding: 0 20px; flex-grow: 1; width: 100%; }
+
+.panel-section { display: none; background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 20px; padding: 24px; margin-bottom: 40px; }
+.panel-section.active { display: block; }
+.panel-title { margin-bottom:15px; font-size: 1.4rem; font-weight:800; }
+
+.input-group { margin-bottom: 12px; }
+.input-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 4px; }
+.input-group input, .input-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; font-family: inherit; }
+
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; background: white; border-radius: 12px; overflow: hidden; }
+th, td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+th { background: #e2e8f0; font-weight: 800; color: #334155; }
+
+.badge-expired { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; }
+.badge-active { background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; }
+.btn-remind { background: #25d366; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 0.85rem; display:inline-block; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-bottom: 30px; }
+.empty-msg { grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: 12px; color: var(--muted); border: 2px dashed #cbd5e1; }
+
+.card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+.card-img-box { position: relative; height: 220px; background: #e2e8f0; }
+.card-img-box img { width: 100%; height: 100%; object-fit: cover; }
+.type-badge { position: absolute; top: 12px; left: 12px; color: white; padding: 4px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: 800; }
+.badge-hs { background: var(--accent); }
+.badge-tx { background: var(--taxi); }
+.badge-tx-sm { background: var(--small-taxi); }
+.badge-shop { background: var(--shop); }
+
+.card-body { padding: 20px; }
+.prop-title { font-size: 1.3rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.prop-loc { font-size: 0.9rem; color: var(--muted); margin-bottom: 12px; }
+.features { font-size: 0.85rem; color: #475569; margin-bottom: 16px; background: #f1f5f9; padding: 10px; border-radius: 8px; }
+.contact-box { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 16px; }
+.real-number { font-size: 1.3rem; font-weight: 800; color: #166534; letter-spacing: 1px; }
+.action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-call { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; }
+.btn-wa { background: #25d366; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; }
+
+.driver-dashboard { background: white; padding: 20px; border-radius: 12px; border: 2px solid var(--taxi); margin-top: 15px; display: none; }
+.btn-turn-off { background: var(--danger); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 800; font-size: 1.1rem; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top:15px; }
+
+.map-container { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; margin-bottom: 40px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+.map-container h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; color: var(--text); }
+.map-box { width: 100%; height: 300px; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="navbar">
+    <a href="#" class="brand">
+      <div class="brand-icon">🏔️</div>
+      <div class="brand-text">
+        <h1>Pahadi Stays & Market</h1>
+        <p>Uttarakhand Tourism Network</p>
+      </div>
+    </a>
+    <div class="head-actions">
+      <button class="btn-outline driver-btn" onclick="togglePanel('driverPanel')">🚖 ड्राइवर पैनल</button>
+      <button class="btn-outline" onclick="togglePanel('adminPanel')">⚙️ ऑपरेटर</button>
+    </div>
+  </div>
+</header>
+
+<section class="banner">
+  <h2>उत्तराखंड में 100% फ्री डायरेक्ट बुकिंग</h2>
+  <p>चमोली, नैनीताल, बद्रीनाथ, केदारनाथ, रामनगर, पिथौरागढ़ — कहीं का भी होमस्टे या टैक्सी सीधे बुक करें।</p>
+</section>
+
+<div class="container">
+  
+  <div class="panel-section" id="adminPanel">
+    <h3 class="panel-title" style="color:var(--primary-dark);">📊 ऑपरेटर कंट्रोल (Auto-Expiry System)</h3>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>नाम व नंबर</th>
+            <th>प्लान (₹)</th>
+            <th>वैधता (Expiry)</th>
+            <th>स्थिति</th>
+            <th>एक्शन</th>
+          </tr>
+        </thead>
+        <tbody id="controlTable"></tbody>
+      </table>
+    </div>
+    
+    <div style="margin-top: 25px; background: white; padding: 20px; border-radius: 12px; border: 1px solid #cbd5e1;">
+      <h4 style="margin-bottom:10px;">📝 उत्तराखंड में कहीं की भी नई सर्विस जोड़ें</h4>
+      <form onsubmit="submitAdminListing(event)">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 15px;">
+          <div class="input-group">
+            <label>कैटेगरी चुनें</label>
+            <select id="pType" required onchange="updatePlaceholder()">
+              <option value="homestay">🏡 होटल / होमस्टे (₹300/महीना)</option>
+              <option value="taxi_small">🚕 टैक्सी - छोटी (₹300/महीना)</option>
+              <option value="taxi_big">🚖 टैक्सी - बड़ी (₹50/महीना)</option>
+              <option value="shop">🛒 लोकल दुकान / उत्पाद (₹150/महीना)</option>
+            </select>
+          </div>
+          <div class="input-group"><label>नाम / जगह का नाम</label><input type="text" id="pTitle" placeholder="उदा. नैनी लेक व्यू होमस्टे" required></div>
+          <div class="input-group"><label>लोकेशन / जिला</label><input type="text" id="pLoc" placeholder="उदा. नैनीताल" required></div>
+          <div class="input-group"><label>मोबाइल नंबर</label><input type="text" id="pPhone" placeholder="मोबाइल नंबर" required></div>
+          <div class="input-group"><label>सुविधाएं / विवरण</label><input type="text" id="pFeatures" placeholder="पार्किंग, वाई-फाई" required></div>
+          <div class="input-group"><label>फोटो लिंक (Photo URL)</label><input type="text" id="pPhoto" placeholder="फोटो का लिंक (वैकल्पिक)"></div>
+          <div class="input-group"><label>एक्सपायरी डेट</label><input type="date" id="pExpiry" required></div>
+        </div>
+        <button type="submit" style="background:#0369a1; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:800; cursor:pointer;">वेबसाइट पर लाइव करें</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="panel-section" id="driverPanel" style="border-color: var(--taxi);">
+    <h3 class="panel-title" style="color:var(--taxi);">🚖 ड्राइवर सेल्फ-कंट्रोल (Auto-Off)</h3>
+    <div style="display: flex; gap:10px; max-width: 400px;">
+      <input type="text" id="driverPhoneCheck" placeholder="अपना मोबाइल नंबर डालें" style="flex:1; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+      <button onclick="checkDriver()" style="background:var(--taxi); color:white; border:none; padding:12px 20px; border-radius:8px; font-weight:800; cursor:pointer;">सर्च</button>
+    </div>
+    <div id="driverActionBox" class="driver-dashboard">
+      <h4 id="driverCarName" style="font-size:1.2rem; color:var(--text);"></h4>
+      <p style="color:var(--success); font-weight:700; margin-top:5px;">🟢 आपकी गाड़ी अभी उत्तराखंड नेटवर्क पर लाइव है।</p>
+      <button class="btn-turn-off" onclick="driverAutoOff()">✅ सवारी मिल गई - वेबसाइट से टैक्सी हटाएं (Auto-Off)</button>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+    <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--text);">⭐ उत्तराखंड की लाइव उपलब्ध सेवाएं</h3>
+  </div>
+
+  <div class="grid" id="mainGrid"></div>
+
+  <div class="map-container">
+    <h3>📍 उत्तराखंड पर्यटन मैप (Google Map)</h3>
+    <div class="map-box">
+      <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=Uttarakhand&t=&z=8&ie=UTF8&iwloc=&output=embed"></iframe>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const todayStr = new Date().toISOString().split('T')[0];
+let properties = [];
+let currentDriverProp = null;
+
+properties.push({
+  id: 1, type: 'homestay', title: "नैनी लेक व्यू होमस्टे", location: "नैनीताल", phone: "9876543214",
+  plan: 300, features: "झील का खूबसूरत नज़ारा, वाई-फाई", photo: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&auto=format&fit=crop&q=60",
+  expiryDate: "2026-10-14", driverTurnedOff: false
+});
+
+properties.push({
+  id: 2, type: 'homestay', title: "कॉर्बेट जंगल स्टे", location: "रामनगर", phone: "9876543215",
+  plan: 300, features: "जिम कॉर्बेट सफारी पैकेज उपलब्ध", photo: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&auto=format&fit=crop&q=60",
+  expiryDate: "2026-10-14", driverTurnedOff: false
+});
+
+properties.push({
+  id: 3, type: 'homestay', title: "सौर घाटी होमस्टे", location: "पिथौरागढ़", phone: "9876543216",
+  plan: 300, features: "पारंपरिक पहाड़ी खाना, पार्किंग", photo: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=500&auto=format&fit=crop&q=60",
+  expiryDate: "2026-10-14", driverTurnedOff: false
+});
+
+properties.push({
+  id: 4, type: 'taxi_big', title: "बद्रीनाथ धाम यात्रा टैक्सी (बोलेरो)", location: "ऋषिकेश से बद्रीनाथ", phone: "9876543217",
+  plan: 50, features: "अनुभवी पहाड़ी ड्राइवर, 7 सीटर", photo: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500&auto=format&fit=crop&q=60",
+  expiryDate: "2026-10-14", driverTurnedOff: false
+});
+
+properties.push({
+  id: 5, type: 'homestay', title: "केदारनाथ दर्शन यात्री निवास", location: "गुप्तकाशी / सोनप्रयाग (केदारनाथ)", phone: "9876543218",
+  plan: 300, features: "हेलीपैड के पास, गीजर सुविधा", photo: "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=500&auto=format&fit=crop&q=60",
+  expiryDate: "2026-10-14", driverTurnedOff: false
+});
+
+properties.push({
+  id: 6, type: 'homestay', title: "तपोवन अल्पाइन होमस्टे", location: "चमोली / जोशीमठ", phone: "9876543210",
+  plan: 300, features: "वैली व्यू, पार्किंग, होममेड खाना", photo: "https://images.unsplash.com/photo-1542223616-949cb81c3c90?w=500&auto=format&fit=crop&q=60",
+  expiryDate: "2026-10-14", driverTurnedOff: false
+});
+
+properties.push({
+  id: 7, type: 'shop', title: "उत्तराखंड ऑर्गेनिक स्टोर", location: "खैनूरी मार्केट, चमोली", phone: "9876543213",
+  plan: 150, features: "असली पहाड़ी राजमा, बुरांश जूस, शहद", photo: "https://images.unsplash.com/photo-1605335193910-145eb5b0e501?w=500&auto=format&fit=crop&q=60",
+  expiryDate: "2026-10-14", driverTurnedOff: false
+});
+
+function updatePlaceholder() {
+  const type = document.getElementById('pType').value;
+  if(type === 'taxi_big') {
+    document.getElementById('pTitle').placeholder = "उदा. बोलेरो";
+    document.getElementById('pFeatures').placeholder = "उदा. 7 सीटें खाली";
+  } else if(type === 'taxi_small') {
+    document.getElementById('pTitle').placeholder = "उदा. Swift / Alto";
+    document.getElementById('pFeatures').placeholder = "उदा. 4 सीटें खाली";
+  } else if(type === 'shop') {
+    document.getElementById('pTitle').placeholder = "दुकान का नाम";
+    document.getElementById('pFeatures').placeholder = "उदा. ऑर्गेनिक दालें, शहद";
+  } else {
+    document.getElementById('pTitle').placeholder = "उदा. होमस्टे नाम";
+    document.getElementById('pFeatures').placeholder = "पार्किंग, कमरे की जानकारी";
+  }
+}
+
+function togglePanel(panelId) {
+  document.getElementById('adminPanel').classList.remove('active');
+  document.getElementById('driverPanel').classList.remove('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+function checkDriver() {
+  const phone = document.getElementById('driverPhoneCheck').value.trim();
+  const prop = properties.find(p => p.phone === phone && p.type.startsWith('taxi') && !p.driverTurnedOff && p.expiryDate >= todayStr);
+  if(prop) {
+    currentDriverProp = prop;
+    document.getElementById('driverCarName').innerText = "🚖 " + prop.title + " (" + prop.location + ")";
+    document.getElementById('driverActionBox').style.display = 'block';
+  } else {
+    alert("इस नंबर पर अभी कोई टैक्सी लाइव नहीं है, या आपका रिचार्ज समाप्त हो गया है।");
+    document.getElementById('driverActionBox').style.display = 'none';
+  }
+}
+
+function driverAutoOff() {
+  if(currentDriverProp) {
+    currentDriverProp.driverTurnedOff = true; 
+    alert("बधाई हो! आपकी गाड़ी सफलतापूर्वक बुक हो गई है और वेबसाइट से हटा दी गई है।");
+    document.getElementById('driverActionBox').style.display = 'none';
+    document.getElementById('driverPhoneCheck').value = '';
+    renderUI();
+  }
+}
+
+function renderUI() {
+  renderCustomerGrid();
+  renderAdminTable();
+}
+
+function renderCustomerGrid() {
+  const grid = document.getElementById('mainGrid');
+  grid.innerHTML = '';
+  
+  const activeProps = properties.filter(p => p.expiryDate >= todayStr && !p.driverTurnedOff);
+
+  if (activeProps.length === 0) {
+    grid.innerHTML = '<div class="empty-msg"><h3>अभी कोई सेवा उपलब्ध नहीं है</h3></div>';
+    return;
+  }
+
+  activeProps.forEach(p => {
+    let badgeClass = 'type-badge badge-hs';
+    let badgeText = '🏡 होटल/होमस्टे';
+    
+    if (p.type === 'taxi_big') { badgeClass = 'type-badge badge-tx'; badgeText = '🚖 बड़ी टैक्सी'; } 
+    else if (p.type === 'taxi_small') { badgeClass = 'type-badge badge-tx-sm'; badgeText = '🚕 छोटी टैक्सी'; }
+    else if (p.type === 'shop') { badgeClass = 'type-badge badge-shop'; badgeText = '🛒 लोकल दुकान'; }
+    
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-img-box">
+        <img src="${p.photo}" alt="${p.title}">
+        <div class="${badgeClass}">${badgeText}</div>
+      </div>
+      <div class="card-body">
+        <h4 class="prop-title">${p.title}</h4>
+        <p class="prop-loc">📍 ${p.location}</p>
+        <div class="features"><b>उपलब्ध:</b> ${p.features}</div>
+        
+        <div class="contact-box">
+          <div style="font-size:0.8rem; color:var(--muted); font-weight:700; margin-bottom:2px;">सीधी बात करें</div>
+          <div class="real-number">+91 ${p.phone}</div>
+        </div>
+        
+        <div class="action-btns">
+          <a href="tel:+91${p.phone}" class="btn-call">📞 कॉल करें</a>
+          <a href="https://wa.me/91${p.phone}?text=नमस्ते, मैंने Pahadi Stays पर देखा कि आपकी सर्विस/उत्पाद (${p.location}) उपलब्ध है।" class="btn-wa" target="_blank">💬 WhatsApp</a>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderAdminTable() {
+  const tbody = document.getElementById('controlTable');
+  tbody.innerHTML = '';
+  properties.forEach(p => {
+    const isExpired = p.expiryDate < todayStr;
+    let waMsg = isExpired ? `https://wa.me/91${p.phone}?text=नमस्ते, Pahadi Stays पर आपका रिचार्ज खत्म हो गया है...` : `https://wa.me/91${p.phone}?text=नमस्ते, आपकी सर्विस (${p.location}) लाइव है।`;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><b>${p.title}</b><br><small>${p.phone} (${p.location})</small></td>
+      <td style="color:#16a34a; font-weight:800;">₹${p.plan}</td>
+      <td style="font-family:monospace; font-weight:700;">${p.expiryDate}</td>
+      <td>${isExpired ? '<span class="badge-expired">Auto-Off</span>' : '<span class="badge-active">Live</span>'}</td>
+      <td><a href="${waMsg}" target="_blank" class="btn-remind">${isExpired ? '💬 रिन्यू मैसेज' : '💬 मैसेज'}</a></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function submitAdminListing(e) {
+  e.preventDefault();
+  const type = document.getElementById('pType').value;
+  
+  let defaultPhoto = "https://images.unsplash.com/photo-1542223616-949cb81c3c90?w=500&auto=format&fit=crop&q=60";
+  if (type.startsWith('taxi')) defaultPhoto = "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&auto=format&fit=crop&q=60";
+  if (type === 'shop') defaultPhoto = "https://images.unsplash.com/photo-1605335193910-145eb5b0e501?w=500&auto=format&fit=crop&q=60";
+
+  const userPhoto = document.getElementById('pPhoto').value.trim();
+  const finalPhoto = userPhoto !== "" ? userPhoto : defaultPhoto;
+
+  let planAmt = 300;
+  if(type === 'taxi_big') planAmt = 50;
+  if(type === 'shop') planAmt = 150;
+
+  properties.unshift({
+    id: Date.now(), type: type, title: document.getElementById('pTitle').value,
+    location: document.getElementById('pLoc').value, phone: document.getElementById('pPhone').value,
+    plan: planAmt, expiryDate: document.getElementById('pExpiry').value,
+    features: document.getElementById('pFeatures').value, photo: finalPhoto, driverTurnedOff: false 
+  });
+  
+  renderUI();
+  alert("उत्तराखंड नेटवर्क पर नई सर्विस लाइव हो गई है!");
+  e.target.reset();
+  
+  let d = new Date(); d.setMonth(d.getMonth() + 1);
+  document.getElementByI
