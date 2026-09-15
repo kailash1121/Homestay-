@@ -183,47 +183,49 @@ let currentDriverProp = null;
 properties.push({
   id: 1, type: 'homestay', title: "नैनी लेक व्यू होमस्टे", location: "नैनीताल", phone: "9876543214",
   plan: 300, features: "झील का खूबसूरत नज़ारा, वाई-फाई", photo: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&auto=format&fit=crop&q=60",
-  expiryDate: "2026-10-14", driverTurnedOff: false
+  expiryDate: "2030-12-31", driverTurnedOff: false
 });
 
 properties.push({
   id: 2, type: 'homestay', title: "कॉर्बेट जंगल स्टे", location: "रामनगर", phone: "9876543215",
   plan: 300, features: "जिम कॉर्बेट सफारी पैकेज उपलब्ध", photo: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&auto=format&fit=crop&q=60",
-  expiryDate: "2026-10-14", driverTurnedOff: false
+  expiryDate: "2030-12-31", driverTurnedOff: false
 });
 
 properties.push({
   id: 3, type: 'homestay', title: "सौर घाटी होमस्टे", location: "पिथौरागढ़", phone: "9876543216",
   plan: 300, features: "पारंपरिक पहाड़ी खाना, पार्किंग", photo: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=500&auto=format&fit=crop&q=60",
-  expiryDate: "2026-10-14", driverTurnedOff: false
+  expiryDate: "2030-12-31", driverTurnedOff: false
 });
 
 properties.push({
   id: 4, type: 'taxi_big', title: "बद्रीनाथ धाम यात्रा टैक्सी (बोलेरो)", location: "ऋषिकेश से बद्रीनाथ", phone: "9876543217",
   plan: 50, features: "अनुभवी पहाड़ी ड्राइवर, 7 सीटर", photo: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500&auto=format&fit=crop&q=60",
-  expiryDate: "2026-10-14", driverTurnedOff: false
+  expiryDate: "2030-12-31", driverTurnedOff: false
 });
 
 properties.push({
   id: 5, type: 'homestay', title: "केदारनाथ दर्शन यात्री निवास", location: "गुप्तकाशी / सोनप्रयाग (केदारनाथ)", phone: "9876543218",
   plan: 300, features: "हेलीपैड के पास, गीजर सुविधा", photo: "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=500&auto=format&fit=crop&q=60",
-  expiryDate: "2026-10-14", driverTurnedOff: false
+  expiryDate: "2030-12-31", driverTurnedOff: false
 });
 
 properties.push({
   id: 6, type: 'homestay', title: "तपोवन अल्पाइन होमस्टे", location: "चमोली / जोशीमठ", phone: "9876543210",
   plan: 300, features: "वैली व्यू, पार्किंग, होममेड खाना", photo: "https://images.unsplash.com/photo-1542223616-949cb81c3c90?w=500&auto=format&fit=crop&q=60",
-  expiryDate: "2026-10-14", driverTurnedOff: false
+  expiryDate: "2030-12-31", driverTurnedOff: false
 });
 
 properties.push({
   id: 7, type: 'shop', title: "उत्तराखंड ऑर्गेनिक स्टोर", location: "खैनूरी मार्केट, चमोली", phone: "9876543213",
   plan: 150, features: "असली पहाड़ी राजमा, बुरांश जूस, शहद", photo: "https://images.unsplash.com/photo-1605335193910-145eb5b0e501?w=500&auto=format&fit=crop&q=60",
-  expiryDate: "2026-10-14", driverTurnedOff: false
+  expiryDate: "2030-12-31", driverTurnedOff: false
 });
 
 function updatePlaceholder() {
-  const type = document.getElementById('pType').value;
+  const typeField = document.getElementById('pType');
+  if(!typeField) return;
+  const type = typeField.value;
   if(type === 'taxi_big') {
     document.getElementById('pTitle').placeholder = "उदा. बोलेरो";
     document.getElementById('pFeatures').placeholder = "उदा. 7 सीटें खाली";
@@ -247,7 +249,7 @@ function togglePanel(panelId) {
 
 function checkDriver() {
   const phone = document.getElementById('driverPhoneCheck').value.trim();
-  const prop = properties.find(p => p.phone === phone && p.type.startsWith('taxi') && !p.driverTurnedOff && p.expiryDate >= todayStr);
+  const prop = properties.find(p => p.phone === phone && p.type.startsWith('taxi') && !p.driverTurnedOff);
   if(prop) {
     currentDriverProp = prop;
     document.getElementById('driverCarName').innerText = "🚖 " + prop.title + " (" + prop.location + ")";
@@ -275,9 +277,10 @@ function renderUI() {
 
 function renderCustomerGrid() {
   const grid = document.getElementById('mainGrid');
+  if(!grid) return;
   grid.innerHTML = '';
   
-  const activeProps = properties.filter(p => p.expiryDate >= todayStr && !p.driverTurnedOff);
+  const activeProps = properties.filter(p => !p.driverTurnedOff);
 
   if (activeProps.length === 0) {
     grid.innerHTML = '<div class="empty-msg"><h3>अभी कोई सेवा उपलब्ध नहीं है</h3></div>';
@@ -321,6 +324,7 @@ function renderCustomerGrid() {
 
 function renderAdminTable() {
   const tbody = document.getElementById('controlTable');
+  if(!tbody) return;
   tbody.innerHTML = '';
   properties.forEach(p => {
     const isExpired = p.expiryDate < todayStr;
@@ -365,4 +369,19 @@ function submitAdminListing(e) {
   e.target.reset();
   
   let d = new Date(); d.setMonth(d.getMonth() + 1);
-  document.getElementByI
+  if(document.getElementById('pExpiry')) {
+    document.getElementById('pExpiry').value = d.toISOString().split('T')[0];
+  }
+  updatePlaceholder();
+}
+
+// Direct execution to ensure cards render instantly on mobile
+let d = new Date(); d.setMonth(d.getMonth() + 1);
+if(document.getElementById('pExpiry')) {
+  document.getElementById('pExpiry').value = d.toISOString().split('T')[0];
+}
+updatePlaceholder();
+renderUI();
+</script>
+</body>
+</html>
